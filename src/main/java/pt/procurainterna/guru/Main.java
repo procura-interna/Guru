@@ -1,5 +1,8 @@
 package pt.procurainterna.guru;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.Future;
 
 import org.apache.commons.cli.CommandLine;
@@ -35,8 +38,8 @@ public class Main {
 
   private static GuruParameters parameters(String[] args) {
     final Options options = new Options();
-    final Option tokenOption = new Option("apiToken", "apiToken", true, "The Discord Bot Token");
-    final Option roleOption = new Option("role", "role", true, "The Discord Bot Token");
+    final Option tokenOption = new Option("apiToken", "apiToken", true, "Path to a file containing the Discord Bot Token");
+    final Option roleOption = new Option("role", "role", true, "The name of the role to assign to new members");
     tokenOption.setRequired(true);
     options.addOption(tokenOption);
     options.addOption(roleOption);
@@ -49,9 +52,18 @@ public class Main {
       throw new IllegalStateException("Cannot set up parameter parsing", e);
     }
 
-    final String apiToken = cmd.getOptionValue("apiToken");
+    final String tokenFilePath = cmd.getOptionValue("apiToken");
+    final String apiToken = readTokenFromFile(tokenFilePath);
     final String roleToAssing = cmd.getOptionValue("role");
 
     return new GuruParameters(apiToken, roleToAssing);
+  }
+
+  private static String readTokenFromFile(String filePath) {
+    try {
+      return Files.readString(Path.of(filePath)).trim();
+    } catch (IOException e) {
+      throw new IllegalStateException("Cannot read API token from file: " + filePath, e);
+    }
   }
 }
