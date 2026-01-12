@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Injector;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import pt.procurainterna.guru.GetChinchillaCommand;
 import pt.procurainterna.guru.SetRoleCommand;
 
 public class EntryPointSlashCommandConsumer implements Consumer<SlashCommandInteractionEvent> {
@@ -33,6 +34,10 @@ public class EntryPointSlashCommandConsumer implements Consumer<SlashCommandInte
           break;
 
         // TODO: removerole
+        case "chinchilla":
+          final GetChinchillaCommand chinchillaCommand = injector.getInstance(GetChinchillaCommand.class);
+          chinchillaCommand.execute(event, hook);
+          break;
 
         default:
           event.getHook().sendMessage("Unknown command").setEphemeral(true).queue();

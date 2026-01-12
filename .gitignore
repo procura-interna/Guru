@@ -5,6 +5,7 @@ target/
 .kotlin
 
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -46,3 +47,7 @@ dependency-reduced-pom.xml
 
 ### JVM Crash Logs ###
 hs_err_pid*
+
+
+### Test ###
+test

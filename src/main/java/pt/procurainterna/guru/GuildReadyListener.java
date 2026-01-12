@@ -17,6 +17,8 @@ public class GuildReadyListener implements Consumer<GuildReadyEvent> {
 
     event.getGuild().upsertCommand("setrole", "Set the role to assign to new users.")
         .addOption(OptionType.ROLE, "role", "Role to be assigned.").queue();
+    event.getGuild().upsertCommand("chinchilla", "Shows a cute chinchilla image :D.")
+            .queue();
   }
 
 }
