@@ -1,4 +1,4 @@
-package pt.procurainterna.guru;
+package pt.procurainterna.guru.persistance;
 
 public class JdbcConfig {
 

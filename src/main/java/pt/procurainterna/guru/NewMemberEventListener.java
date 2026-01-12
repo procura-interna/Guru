@@ -2,8 +2,6 @@ package pt.procurainterna.guru;
 
 import java.util.Optional;
 
-import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.statement.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,15 +10,17 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import pt.procurainterna.guru.model.GuildInitialRole;
+import pt.procurainterna.guru.persistance.GuildInitialRoleRepository;
 
 public class NewMemberEventListener extends ListenerAdapter {
 
   private static final Logger logger = LoggerFactory.getLogger(NewMemberEventListener.class);
 
-  private final Jdbi jdbi;
+  private final GuildInitialRoleRepository repository;
 
-  public NewMemberEventListener(Jdbi jdbi) {
-    this.jdbi = jdbi;
+  public NewMemberEventListener(GuildInitialRoleRepository repository) {
+    this.repository = repository;
   }
 
   @Override
@@ -58,13 +58,7 @@ public class NewMemberEventListener extends ListenerAdapter {
   }
 
   private Optional<String> roleId(final Guild guild) {
-    return jdbi.withHandle(handle -> {
-      final Query query =
-          handle.createQuery("SELECT role_id FROM guild_starting_role WHERE guild_id = ?").bind(0,
-              guild.getId());
-
-      return query.mapTo(String.class).findFirst();
-    });
+    return repository.forGuild(guild.getId()).map(GuildInitialRole::roleId);
   }
 
 }

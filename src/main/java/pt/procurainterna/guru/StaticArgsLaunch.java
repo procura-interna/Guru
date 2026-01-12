@@ -2,7 +2,6 @@ package pt.procurainterna.guru;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -18,9 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import pt.procurainterna.guru.persistance.JdbcConfig;
 
-public class Main {
+public class StaticArgsLaunch {
 
-  private static final Logger logger = LoggerFactory.getLogger(Main.class);
+  private static final Logger logger = LoggerFactory.getLogger(StaticArgsLaunch.class);
 
   public static void main(String[] args) {
     logger.info("Starting Guru Bot...");
@@ -35,6 +34,7 @@ public class Main {
 
     try {
       guruFuture.get();
+
     } catch (Exception e) {
       logger.error("Guru Bot runtime failed", e);
     }
@@ -56,8 +56,7 @@ public class Main {
       throw new IllegalStateException("Cannot set up parameter parsing", e);
     }
 
-    final String apiTokenPath = cmd.getOptionValue("apiToken");
-    final String apiToken = readTokenFromPath(apiTokenPath);
+    final String apiToken = cmd.getOptionValue("apiToken");
     final String jdbcConfigValue = cmd.getOptionValue("jdbcConfig");
 
     final Properties properties = new Properties();
@@ -74,13 +73,5 @@ public class Main {
     final String driverClassName = properties.getProperty("driverClassName", "");
 
     return new GuruParameters(apiToken, new JdbcConfig(driverClassName, password, url, user));
-  }
-
-  public static String readTokenFromPath(String path) {
-    try {
-      return Files.readString(Path.of(path)).trim();
-    } catch (IOException e) {
-      throw new IllegalArgumentException("Unable to read token from path.");
-    }
   }
 }

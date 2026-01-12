@@ -9,11 +9,17 @@ import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import pt.procurainterna.guru.cdi.GuruCdiModule;
+import pt.procurainterna.guru.jda.events.EntryPointEventListener;
+import pt.procurainterna.guru.jda.events.EntryPointSlashCommandConsumer;
+import pt.procurainterna.guru.persistance.JdbcConfig;
 
 public class GuruBot {
 
@@ -25,10 +31,14 @@ public class GuruBot {
 
     final Jdbi jdbi = jdbi(parameters.jdbcConfig);
 
+    final Injector injector = Guice.createInjector(new GuruCdiModule(jdbi));
+
+    final EntryPointEventListener entryPointEventListener =
+        new EntryPointEventListener(() -> future.complete(null),
+            new EntryPointSlashCommandConsumer(injector), new GuildReadyListener());
+
     final JDA jda = JDABuilder.createDefault(parameters.apiToken)
-        .addEventListeners(new ShutdownListener(() -> future.complete(null)))
-        .addEventListeners(new GuildReadyListener()).addEventListeners(new CommandListener(jdbi))
-        .addEventListeners(new NewMemberEventListener(jdbi)).build();
+        .addEventListeners(entryPointEventListener).build();
 
     future.whenComplete((ok, ex) -> {
       if (ex != null) {

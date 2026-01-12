@@ -1,12 +1,13 @@
 package pt.procurainterna.guru;
 
+import java.util.function.Consumer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.events.session.ShutdownEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class ShutdownListener extends ListenerAdapter {
+public class ShutdownListener implements Consumer<ShutdownEvent> {
 
   private static final Logger logger = LoggerFactory.getLogger(ShutdownListener.class);
 
@@ -17,7 +18,7 @@ public class ShutdownListener extends ListenerAdapter {
   }
 
   @Override
-  public void onShutdown(ShutdownEvent event) {
+  public void accept(ShutdownEvent event) {
     logger.info("Shutdown event received: {}", event.getClass().getSimpleName());
     onShutdown.run();
   }
