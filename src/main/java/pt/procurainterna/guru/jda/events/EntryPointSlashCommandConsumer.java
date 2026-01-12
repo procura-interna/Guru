@@ -23,23 +23,23 @@ public class EntryPointSlashCommandConsumer implements Consumer<SlashCommandInte
 
   @Override
   public void accept(SlashCommandInteractionEvent event) {
-    event.deferReply().queue();
-
     final String commandName = event.getName();
 
-    switch (commandName) {
-      case "setrole":
-        final SetRoleCommand setRoleCommand = injector.getInstance(SetRoleCommand.class);
-        setRoleCommand.execute(event);
-        break;
+    event.deferReply().queue(hook -> {
+      switch (commandName) {
+        case "setrole":
+          final SetRoleCommand setRoleCommand = injector.getInstance(SetRoleCommand.class);
+          setRoleCommand.execute(event);
+          break;
 
-      // TODO: removerole
+        // TODO: removerole
 
-      default:
-        event.getHook().sendMessage("Unknown command").setEphemeral(true).queue();
-        logger.error("Unknown command: {}", commandName);
-        break;
-    }
+        default:
+          event.getHook().sendMessage("Unknown command").setEphemeral(true).queue();
+          logger.error("Unknown command: {}", commandName);
+          break;
+      }
+    });
   }
 
 }
