@@ -17,8 +17,6 @@ public class SetRoleCommand {
   }
 
   public void execute(SlashCommandInteractionEvent event) {
-    event.deferReply(false).queue();
-
     final OptionMapping option = event.getOption("role");
     if (option == null) {
       event.getHook().sendMessage("Please provide a role").setEphemeral(true).queue();
