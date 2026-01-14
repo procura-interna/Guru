@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
 import java.util.concurrent.Future;
 
 import org.apache.commons.cli.CommandLine;
@@ -17,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.procurainterna.guru.persistance.JdbcConfig;
+import pt.procurainterna.guru.persistance.JdbcConfigReader;
 
 public class StaticArgsLaunch {
 
@@ -60,25 +60,17 @@ public class StaticArgsLaunch {
     final String apiToken = readTokenFromPath(apiTokenPath);
     final String jdbcConfigValue = cmd.getOptionValue("jdbcConfig");
 
-    final Properties properties = new Properties();
-    try (final var inputStream = Files.newInputStream(Paths.get(jdbcConfigValue))) {
-      properties.load(inputStream);
 
-    } catch (IOException e) {
-      throw new IllegalStateException("Cannot load JDBC configuration", e);
-    }
+    final JdbcConfig jdbcConfig = JdbcConfigReader.read(Paths.get(jdbcConfigValue));
 
-    final String url = properties.getProperty("url", "");
-    final String user = properties.getProperty("user", "");
-    final String password = properties.getProperty("password", "");
-    final String driverClassName = properties.getProperty("driverClassName", "");
 
-    return new GuruParameters(apiToken, new JdbcConfig(driverClassName, password, url, user));
+    return new GuruParameters(apiToken, jdbcConfig);
   }
 
   public static String readTokenFromPath(String path) {
     try {
       return Files.readString(Path.of(path)).trim();
+
     } catch (IOException e) {
       throw new IllegalArgumentException("Unable to read token from path.");
     }

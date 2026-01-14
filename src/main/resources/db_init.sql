@@ -1,0 +1,1 @@
+CREATE TABLE "guild_starting_role" ("id"	INTEGER UNIQUE, "guild_id"	TEXT NOT NULL UNIQUE,	"role_id"	TEXT NOT NULL, PRIMARY KEY("id" AUTOINCREMENT));

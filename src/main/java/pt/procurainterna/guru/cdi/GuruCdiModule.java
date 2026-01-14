@@ -4,6 +4,8 @@ import org.jdbi.v3.core.Jdbi;
 
 import com.google.inject.AbstractModule;
 
+import pt.procurainterna.guru.persistance.DbInitializer;
+import pt.procurainterna.guru.persistance.DefaultDbInitializer;
 import pt.procurainterna.guru.persistance.GuildInitialRoleRepository;
 import pt.procurainterna.guru.persistance.JdbiGuildInitialRoleRepository;
 
@@ -19,6 +21,7 @@ public class GuruCdiModule extends AbstractModule {
   protected void configure() {
     bind(Jdbi.class).toInstance(jdbi);
     bind(GuildInitialRoleRepository.class).to(JdbiGuildInitialRoleRepository.class);
+    bind(DbInitializer.class).to(DefaultDbInitializer.class);
   }
 
 }
