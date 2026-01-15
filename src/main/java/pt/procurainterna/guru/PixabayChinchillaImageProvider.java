@@ -23,6 +23,15 @@ public class PixabayChinchillaImageProvider implements ChinchillaImageProvider {
   private static final String pixabayKey = System.getenv("PIXABAY_KEY");
 
   @Override
+  public URI getImageURI() {
+    try {
+      return getRandomChinchillaURI();
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public InputStream getImage() {
     try (final HttpClient client = HttpClient.newBuilder().build()) {
       final URI imageURI = getRandomChinchillaURI();

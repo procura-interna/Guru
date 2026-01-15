@@ -1,7 +1,10 @@
 package pt.procurainterna.guru;
 
 import java.io.InputStream;
+import java.net.URI;
 
 public interface ChinchillaImageProvider {
-    InputStream getImage();
+  URI getImageURI();
+
+  InputStream getImage();
 }
