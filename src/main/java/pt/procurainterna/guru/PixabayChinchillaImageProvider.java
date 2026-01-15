@@ -16,6 +16,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 
 public class PixabayChinchillaImageProvider implements ChinchillaImageProvider {
 
@@ -24,7 +25,7 @@ public class PixabayChinchillaImageProvider implements ChinchillaImageProvider {
   @Override
   public InputStream getImage() {
     try (final HttpClient client = HttpClient.newBuilder().build()) {
-      final URI imageURI = getChinchillaURI();
+      final URI imageURI = getRandomChinchillaURI();
 
       var request = HttpRequest.newBuilder()
           .uri(imageURI)
@@ -45,35 +46,40 @@ public class PixabayChinchillaImageProvider implements ChinchillaImageProvider {
     }
   }
 
-  private static URI getChinchillaURI() throws URISyntaxException {
-    var chinchillaImageMeta = getChinchillaImageMetaData();
+  private static URI getRandomChinchillaURI() throws URISyntaxException {
+    var chinchillaMetaDataTotal = getChinchillaImageMetaData(1, 3);
+    var total = chinchillaMetaDataTotal.total;
 
-    // TODO: handle if there are no hits
-    // TODO: hanlde if chinchillaImageMeta is null
-    if(chinchillaImageMeta.hits.isEmpty()){
-      throw new RuntimeException("Pixabay returned no pictures");
-    }
-
-    int randomIdx= (int)(Math.random() * (chinchillaImageMeta.hits.size() - 1));
-
-    return new URI(chinchillaImageMeta.hits.get(randomIdx).webformatURL);
+    var randomIndex = new Random().nextInt(total);
+    return getNthChinchillaURI(randomIndex);
   }
 
-  private static ChinchillaMetaData getChinchillaImageMetaData() {
+  private static ChinchillaMetaData getChinchillaImageMetaData(int page, int perPage)
+      throws URISyntaxException {
     try {
-      var uriString =
-          "https://pixabay.com/api/?key=" + URLEncoder.encode(pixabayKey, StandardCharsets.UTF_8) + "&q=chinchilla&image_type=photo";
-
-      var uri = new URI(uriString);
-
+      var uri = new URI(createUriString(page, perPage));
       var chinchillaMetadataString = makeRequest(uri);
 
       return new GsonBuilder().create()
           .fromJson(chinchillaMetadataString, ChinchillaMetaData.class);
 
+
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private static URI getNthChinchillaURI(int n) throws URISyntaxException {
+    int page = (n / 3) + 1;
+    int idx = n % 3;
+
+    var chinchillaImageMeta = getChinchillaImageMetaData(page, 3);
+
+    if (chinchillaImageMeta.hits.isEmpty()) {
+      throw new RuntimeException("Pixabay returned no pictures");
+    }
+
+    return new URI(chinchillaImageMeta.hits.get(idx).webformatURL);
   }
 
   private static String makeRequest(URI uri) {
@@ -94,15 +100,20 @@ public class PixabayChinchillaImageProvider implements ChinchillaImageProvider {
     }
   }
 
-  private static class ChinchillaMetaData{
+  private static String createUriString(int page, int perPage) {
+    return "https://pixabay.com/api/?key=" + URLEncoder.encode(pixabayKey, StandardCharsets.UTF_8)
+        + "&q=chinchilla&image_type=photo&page=" + page + "&per_page=" + perPage;
+  }
+
+  private static class ChinchillaMetaData {
+
     public int total;
     public int totalHits;
     public List<Hit> hits;
 
-    private static class Hit{
+    private static class Hit {
+
       public String webformatURL;
     }
   }
-
 }
-
