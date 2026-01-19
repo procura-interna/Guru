@@ -17,6 +17,9 @@ public class GuildReadyListener implements Consumer<GuildReadyEvent> {
 
     event.getGuild().upsertCommand("setrole", "Set the role to assign to new users.")
         .addOption(OptionType.ROLE, "role", "Role to be assigned.").queue();
+
+    event.getGuild().upsertCommand("setdlcchannel", "Set the channel where LeetCode daily challenges are sent to.")
+        .addOption(OptionType.CHANNEL, "channel", "Channel to set.").queue();
   }
 
 }
