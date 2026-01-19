@@ -1,1 +1,2 @@
 CREATE TABLE "guild_starting_role" ("id"	INTEGER UNIQUE, "guild_id"	TEXT NOT NULL UNIQUE,	"role_id"	TEXT NOT NULL, PRIMARY KEY("id" AUTOINCREMENT));
+CREATE TABLE "daily_lc_challenge_guild_channel" ("dbid"	INTEGER NOT NULL UNIQUE, "guildId"	TEXT NOT NULL, "channelId"	TEXT NOT NULL, "dbTimestamp"	INTEGER NOT NULL,	PRIMARY KEY("dbid" AUTOINCREMENT));

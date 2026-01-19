@@ -1,18 +1,22 @@
 package pt.procurainterna.guru.persistance;
 
+import java.time.Instant;
+
 public class GuildDailyChallengeConfig {
 
   public Long id;
   public String guildId;
   public String channelId;
+  public Instant dbTimestamp;
 
   public GuildDailyChallengeConfig() {
   }
 
-  public GuildDailyChallengeConfig(Long id, String guildId, String channelId) {
+  public GuildDailyChallengeConfig(Long id, String guildId, String channelId, Instant dbTimestamp) {
     this.id = id;
     this.guildId = guildId;
     this.channelId = channelId;
+    this.dbTimestamp = dbTimestamp;
   }
 
   public Long getId() {
@@ -37,5 +41,13 @@ public class GuildDailyChallengeConfig {
 
   public void setChannelId(String channelId) {
     this.channelId = channelId;
+  }
+
+  public Instant getDbTimestamp() {
+    return dbTimestamp;
+  }
+
+  public void setDbTimestamp(Instant dbTimestamp) {
+    this.dbTimestamp = dbTimestamp;
   }
 }
