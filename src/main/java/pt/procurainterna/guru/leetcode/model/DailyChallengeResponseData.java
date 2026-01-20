@@ -1,11 +1,10 @@
-package pt.procurainterna.guru.leetcode;
+package pt.procurainterna.guru.leetcode.model;
 
 public class DailyChallengeResponseData {
 
   public DailyChallengeResponseDataQuestion activeDailyCodingChallengeQuestion;
 
-  public DailyChallengeResponseData() {
-  }
+  public DailyChallengeResponseData() {}
 
   public DailyChallengeResponseData(
       DailyChallengeResponseDataQuestion activeDailyCodingChallengeQuestion) {

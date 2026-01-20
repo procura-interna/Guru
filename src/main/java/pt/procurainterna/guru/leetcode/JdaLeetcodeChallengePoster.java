@@ -1,14 +1,16 @@
 package pt.procurainterna.guru.leetcode;
 
-import jakarta.inject.Inject;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
+
+import jakarta.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import pt.procurainterna.guru.leetcode.model.DailyChallengeResponse;
 import pt.procurainterna.guru.persistance.DailyChallengeConfigRepository;
 import pt.procurainterna.guru.persistance.GuildDailyChallengeConfig;
 
@@ -38,38 +40,38 @@ public class JdaLeetcodeChallengePoster implements LeetcodeChallengePoster {
   }
 
   private MessageEmbed toEmbed(DailyChallengeResponse dailyChallenge) {
-    Objects.requireNonNull(dailyChallenge, "resp");
+    Objects.requireNonNull(dailyChallenge, "dailyChallenge");
 
-    var q = Objects.requireNonNull(dailyChallenge.getData(), "resp.data")
-        .getActiveDailyCodingChallengeQuestion();
+    final var challengeData =
+        Objects.requireNonNull(dailyChallenge.getData(), "dailyChallenge.data")
+            .getActiveDailyCodingChallengeQuestion();
 
-    if (q == null) {
+    if (challengeData == null) {
       return new EmbedBuilder().setTitle("LeetCode Daily")
           .setDescription("No daily challenge available in the response.").build();
     }
 
-    var question = q.getQuestion();
+    final var question = challengeData.getQuestion();
+    Objects.requireNonNull(question, "challengeData.question");
 
-    LocalDate dateStr = q.getDate(); // "2026-01-19"
-    String formattedDate = DateTimeFormatter.ISO_LOCAL_DATE.format(dateStr);
+    final LocalDate dateStr = challengeData.getDate();
+    final String formattedDate = DateTimeFormatter.ISO_LOCAL_DATE.format(dateStr);
 
-    String title = (question != null && question.getTitle() != null) ? question.getTitle()
-        : "LeetCode Daily Challenge";
+    final String title =
+        (question.getTitle() != null) ? question.getTitle() : "LeetCode Daily Challenge";
 
-    String difficulty = question.getDifficulty();
-    String id = question.getFrontendQuestionId();
+    final String difficulty = question.getDifficulty();
+    final String id = question.getFrontendQuestionId();
 
-    String url = "https://leetcode.com" + q.getLink();
+    final String url = "https://leetcode.com" + challengeData.getLink();
 
-    String displayTitle = (id.isBlank() ? title : (id + ". " + title));
+    final String displayTitle = (id.isBlank() ? title : (id + ". " + title));
 
-    String desc =
-        "Difficulty: **" + (difficulty.isBlank() ? "—" : difficulty) + "**" + "\nDate: **" + (
-            formattedDate.isBlank() ? "—" : formattedDate) + "**";
+    final String desc = "Difficulty: **" + (difficulty.isBlank() ? "—" : difficulty) + "**"
+        + "\nDate: **" + (formattedDate.isBlank() ? "—" : formattedDate) + "**";
 
     return new EmbedBuilder().setTitle("🧩 LeetCode Daily — " + displayTitle, url)
         .setDescription(desc).addField("Link", url, false).setFooter("LeetCode Daily Challenge")
-        .setColor(new Color(255, 161, 22))
-        .build();
+        .setColor(new Color(255, 161, 22)).build();
   }
 }

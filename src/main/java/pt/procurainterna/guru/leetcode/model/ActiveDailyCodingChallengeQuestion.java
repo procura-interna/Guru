@@ -1,4 +1,4 @@
-package pt.procurainterna.guru.leetcode;
+package pt.procurainterna.guru.leetcode.model;
 
 public class ActiveDailyCodingChallengeQuestion {
 
@@ -6,8 +6,7 @@ public class ActiveDailyCodingChallengeQuestion {
   public String difficulty;
   public String frontendQuestionId;
 
-  public ActiveDailyCodingChallengeQuestion() {
-  }
+  public ActiveDailyCodingChallengeQuestion() {}
 
   public ActiveDailyCodingChallengeQuestion(String title, String difficulty,
       String frontendQuestionId) {

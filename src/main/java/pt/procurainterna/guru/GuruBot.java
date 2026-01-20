@@ -1,20 +1,23 @@
 package pt.procurainterna.guru;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+
 import javax.sql.DataSource;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
+
 import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import pt.procurainterna.guru.cdi.GuruCdiModule;
 import pt.procurainterna.guru.jda.events.EntryPointEventListener;
 import pt.procurainterna.guru.jda.events.EntryPointSlashCommandConsumer;
-import pt.procurainterna.guru.leetcode.DailyChallengeFetcher;
-import pt.procurainterna.guru.leetcode.LeetcodeChallengePoster;
+import pt.procurainterna.guru.leetcode.LCDailyChallengeScheduler;
 import pt.procurainterna.guru.persistance.DbInitializer;
 import pt.procurainterna.guru.persistance.JdbcConfig;
 import pt.procurainterna.guru.persistance.hikari.ConfigToHikariDataSource;
@@ -39,17 +42,7 @@ public class GuruBot {
             new EntryPointSlashCommandConsumer(injector), new GuildReadyListener());
     jda.addEventListener(entryPointEventListener);
 
-    try {
-      Thread.sleep(10_000);
-
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    final DailyChallengeFetcher challengeFetcher = injector.getInstance(DailyChallengeFetcher.class);
-    final LeetcodeChallengePoster challengePoster = injector.getInstance(LeetcodeChallengePoster.class);
-
-    challengePoster.post(challengeFetcher.fetch());
+    injector.getInstance(LCDailyChallengeScheduler.class).schedule();
 
     future.whenComplete((ok, ex) -> {
       if (ex != null) {

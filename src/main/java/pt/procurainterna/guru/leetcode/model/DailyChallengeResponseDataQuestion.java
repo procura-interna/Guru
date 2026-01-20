@@ -1,4 +1,4 @@
-package pt.procurainterna.guru.leetcode;
+package pt.procurainterna.guru.leetcode.model;
 
 import java.time.LocalDate;
 
@@ -8,8 +8,7 @@ public class DailyChallengeResponseDataQuestion {
   public String link;
   private ActiveDailyCodingChallengeQuestion question;
 
-  public DailyChallengeResponseDataQuestion() {
-  }
+  public DailyChallengeResponseDataQuestion() {}
 
   public DailyChallengeResponseDataQuestion(LocalDate date, String link,
       ActiveDailyCodingChallengeQuestion question) {

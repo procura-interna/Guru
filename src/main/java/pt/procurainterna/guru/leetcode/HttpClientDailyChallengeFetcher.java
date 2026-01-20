@@ -1,12 +1,16 @@
 package pt.procurainterna.guru.leetcode;
 
-import com.google.gson.Gson;
-import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+
+import com.google.gson.Gson;
+
+import jakarta.inject.Inject;
+import pt.procurainterna.guru.leetcode.model.DailyChallengeResponse;
 
 public class HttpClientDailyChallengeFetcher implements DailyChallengeFetcher {
 
@@ -30,7 +34,8 @@ public class HttpClientDailyChallengeFetcher implements DailyChallengeFetcher {
     httpGet.setHeader("Accept", "application/json");
 
     try {
-      return httpClient.execute(httpGet, new GsonHttpResponseHandler<>(gson, DailyChallengeResponse.class));
+      return httpClient.execute(httpGet,
+          new GsonHttpResponseHandler<>(gson, DailyChallengeResponse.class));
 
     } catch (IOException e) {
       throw new RuntimeException(e);

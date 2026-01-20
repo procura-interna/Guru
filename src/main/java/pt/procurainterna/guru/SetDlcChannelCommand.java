@@ -38,7 +38,8 @@ public class SetDlcChannelCommand {
       throw new RuntimeException(e);
     }
 
-    event.getHook().sendMessage("Channel set").setEphemeral(true).queue();
+    event.getHook().sendMessage("Channel set to " + channel.getAsMention() + ".").setEphemeral(true)
+        .queue();
   }
 
   private void setConfig(String guildId, String channelId) {
