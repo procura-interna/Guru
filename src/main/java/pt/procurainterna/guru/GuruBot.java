@@ -36,6 +36,7 @@ public class GuruBot {
     final JDA jda = JDABuilder.createDefault(parameters.apiToken).build();
     final Injector injector = Guice.createInjector(new GuruCdiModule(jdbi, jda));
 
+
     injector.getInstance(DbInitializer.class).initialize();
     final EntryPointEventListener entryPointEventListener =
         new EntryPointEventListener(() -> future.complete(null),

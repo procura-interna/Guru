@@ -34,7 +34,7 @@ public class LCDailyChallengeScheduler {
         .withIdentity("dailyChallengeJob", "daily").build();
 
 
-    final CronScheduleBuilder schedule = CronScheduleBuilder.dailyAtHourAndMinute(23, 16)
+    final CronScheduleBuilder schedule = CronScheduleBuilder.dailyAtHourAndMinute(8, 00)
         .inTimeZone(TimeZone.getTimeZone("Europe/Lisbon"));
     final Trigger trigger = TriggerBuilder.newTrigger()
         .withIdentity("dailyChallengeTrigger", "daily").withSchedule(schedule).build();
