@@ -67,7 +67,7 @@ public class GuruCdiModule extends AbstractModule {
           out.nullValue();
           return;
         }
-        out.value(value.toString()); // 2026-01-19
+        out.value(value.toString());
       }
 
       @Override
