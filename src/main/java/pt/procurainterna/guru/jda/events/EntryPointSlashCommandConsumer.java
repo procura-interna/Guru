@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Injector;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import pt.procurainterna.guru.PostDailyChallengeCommand;
 import pt.procurainterna.guru.SetDlcChannelCommand;
 import pt.procurainterna.guru.SetRoleCommand;
 
@@ -34,8 +35,15 @@ public class EntryPointSlashCommandConsumer implements Consumer<SlashCommandInte
           break;
 
         case "setdlcchannel":
-          final SetDlcChannelCommand setDlcChannelCommand = injector.getInstance(SetDlcChannelCommand.class);
+          final SetDlcChannelCommand setDlcChannelCommand =
+              injector.getInstance(SetDlcChannelCommand.class);
           setDlcChannelCommand.execute(event);
+          break;
+
+        case "postdlcchallenge":
+          final PostDailyChallengeCommand postDailyChallengeCommand =
+              injector.getInstance(PostDailyChallengeCommand.class);
+          postDailyChallengeCommand.execute(event);
           break;
 
         // TODO: removerole

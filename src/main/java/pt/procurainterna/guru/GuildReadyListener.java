@@ -22,6 +22,9 @@ public class GuildReadyListener extends ListenerAdapter {
         .upsertCommand("setdlcchannel",
             "Set the channel where LeetCode daily challenges are sent to.")
         .addOption(OptionType.CHANNEL, "channel", "Channel to set.").queue();
+
+    event.getGuild().upsertCommand("postdlcchallenge",
+        "Post the LeetCode daily challenge to the configured channel.").queue();
   }
 
 }
