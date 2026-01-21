@@ -33,14 +33,14 @@ public class GuruBot {
     final Jdbi jdbi = jdbi(parameters.jdbcConfig);
 
 
-    final JDA jda = JDABuilder.createDefault(parameters.apiToken).build();
+    final JDA jda = JDABuilder.createDefault(parameters.apiToken)
+        .addEventListeners(new GuildReadyListener()).build();
     final Injector injector = Guice.createInjector(new GuruCdiModule(jdbi, jda));
 
 
     injector.getInstance(DbInitializer.class).initialize();
-    final EntryPointEventListener entryPointEventListener =
-        new EntryPointEventListener(() -> future.complete(null),
-            new EntryPointSlashCommandConsumer(injector), new GuildReadyListener());
+    final EntryPointEventListener entryPointEventListener = new EntryPointEventListener(
+        () -> future.complete(null), new EntryPointSlashCommandConsumer(injector));
     jda.addEventListener(entryPointEventListener);
 
     injector.getInstance(LCDailyChallengeScheduler.class).schedule();
@@ -62,4 +62,5 @@ public class GuruBot {
 
     return Jdbi.create(dataSource);
   }
+
 }

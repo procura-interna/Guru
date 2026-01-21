@@ -25,6 +25,9 @@ public class StaticArgsLaunch {
   private static final Logger logger = LoggerFactory.getLogger(StaticArgsLaunch.class);
 
   public static void main(String[] args) {
+    Thread.setDefaultUncaughtExceptionHandler(
+        (t, e) -> logger.error("Uncaught exception in thread {}", t.getName(), e));
+
     logger.info("Bootstrapping Guru Bot...");
     final GuruParameters parameters = parameters(args);
 
