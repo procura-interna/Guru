@@ -26,6 +26,8 @@ public class EntryPointEventListener implements EventListener {
     } else if (event instanceof SlashCommandInteractionEvent slashCommandInteractionEvent) {
       commandHandler.accept(slashCommandInteractionEvent);
 
+    } else {
+      // do nothing
     }
   }
 
