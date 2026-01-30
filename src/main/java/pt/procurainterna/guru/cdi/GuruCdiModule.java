@@ -58,6 +58,7 @@ public class GuruCdiModule extends AbstractModule {
   }
 
   private Gson gson() {
+
     final GsonBuilder builder = new GsonBuilder();
 
     builder.registerTypeAdapter(LocalDate.class, new TypeAdapter<LocalDate>() {
